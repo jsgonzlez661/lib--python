@@ -32,10 +32,10 @@ def open_log():
 def find_rmn():  # Buscar los valores de SHIELDING en el archivo .log
     global rmn
     escudo.look_shielding()
-    if(escudo.rmn_13C != [] and escudo.rmn_1H != []):
-        rmn = escudo.rmn_13C + escudo.rmn_1H
-    if(rmn != ""):
-        shdScreen.set(rmn)
+    if(escudo.rmn_13C != []):
+        shdScreen.set("Shielding Encontradas")
+    else:
+        shdScreen.set("No existen Shielding")
     escudo.cerrar_doc()
 
 
@@ -52,7 +52,7 @@ search_p = tk.Button(miFrame, text="Find SHIELDING",
                      command=lambda: find_rmn())
 search_p.grid(row=1, column=1, padx=10, pady=10, columnspan=2)
 
-text_title = tk.Label(miFrame, text="SHIELDING found:")
+text_title = tk.Label(miFrame, text="")
 text_title.grid(row=2, column=0)
 
 shd = tk.Entry(miFrame, textvariable=shdScreen)
