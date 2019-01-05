@@ -2,7 +2,7 @@
 
 # --------------- Modulos importados ---------------
 from tkinter.filedialog import askopenfile, asksaveasfilename
-from tkinter.messagebox import showi
+from tkinter.messagebox import showinfo
 # --------------- Definicion de las clases ---------------
 
 # ----- Clase Padre -----
