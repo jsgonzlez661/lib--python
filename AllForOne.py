@@ -14,8 +14,8 @@ class documento():
 
     def __init__(self):  # ----- Constructor de la clase  -----
         self.nombre_doc = ""
-        self._archivo = "" 
-        self._lines = ""  # ----- Se guadara las lineas del documento -----
+        self._archivo = ""
+        self.lines = ""  # ----- Se guadara las lineas del documento -----
 
     def abrir_docexp(self):  # ----- Abrir el archivo .log por el explorador -----
         if(self._archivo == ""):
@@ -24,7 +24,8 @@ class documento():
                    'filetypes': [('Archivo GAMESS', '*.log')]}
             self._archivo = askopenfile(**opt)
         if(self._archivo != None):
-            self._lines = self._archivo.readlines()
+            self.lines = reversed(self._archivo.readlines())
+            self.lines = list(self.lines)
 
     def abrir_doc(self):  # ----- Abrir el archivo .log por el nombre -----
         if(self._archivo == ""):
@@ -32,7 +33,8 @@ class documento():
                 "Ingrese el nombre del archivo .log: ") + '.log'
             self._archivo = open(self.nombre_doc, mode='r',
                                  encoding='utf-8', errors='ignore')
-            self._lines = self._archivo.readlines()
+            self.lines = reversed(self._archivo.readlines())
+            self.lines = list(self.lines)
 
     def cerrar_doc(self):  # ----- Cerrar el archivo .log -----
         if(self._archivo != "" and self._archivo != None):
@@ -62,22 +64,30 @@ class Shielding(documento):
         self.identificadorH = []
 
     def look_shielding(self):  # ----- Buscar Shielding en el documento -----
-        if(self._archivo != "" and self._lines != ""):
+        if(self._archivo != "" and self.lines != ""):
             i = 0
-            for line in self._lines:
-                i = i+1
+            for line in self.lines:
+
                 if("C         X" in line):
-                    self.identificadorC = self.identificadorC + self._lines[i-1].split()
-                    self.valores_13C = self.valores_13C + self._lines[i+2].split()
+                    self.identificadorC = self.identificadorC + \
+                        line.strip('\n').split()
+                    self.valores_13C = self.valores_13C + \
+                        self.lines[i-3].split()
                 if("H         X" in line):
-                    self.identificadorH = self.identificadorH + self._lines[i-1].split()
-                    self.valores_1H = self.valores_1H + self._lines[i+2].split()
+                    self.identificadorH = self.identificadorH + \
+                        line.strip('\n').split()
+                    self.valores_1H = self.valores_1H + self.lines[i-3].split()
+                if("GIAO CHEMICAL SHIELDING TENSOR" in line):
+                    break
+                i = i+1
             if(self.valores_13C != []):
                 self.valores_13C = self._convert_lista(self.valores_13C)
-                self.identificadorC = self.__identificar_atom(self.identificadorC)
+                self.identificadorC = self.__identificar_atom(
+                    self.identificadorC)
             if(self.valores_1H != []):
                 self.valores_1H = self._convert_lista(self.valores_1H)
-                self.identificadorH = self.__identificar_atom(self.identificadorH)
+                self.identificadorH = self.__identificar_atom(
+                    self.identificadorH)
             else:
                 if(self.valores_13C == [] or self.valores_1H == []):
                     return "No existen Shielding en el archivo"
@@ -104,12 +114,14 @@ class Shielding(documento):
                 doc.write('\n')
                 doc.write('Carbono Shielding\n')
                 for i in range(0, len(self.valores_13C)):
-                    doc.write(self.identificadorC[i] + " " + str(self.valores_13C[i]))
+                    doc.write(
+                        self.identificadorC[i] + " " + str(self.valores_13C[i]))
                     doc.write('\n')
                 doc.write('\n')
                 doc.write('Hidrogeno Shielding\n')
                 for i in range(0, len(self.valores_1H)):
-                    doc.write(self.identificadorH[i] + " " + str(self.valores_1H[i]))
+                    doc.write(
+                        self.identificadorH[i] + " " + str(self.valores_1H[i]))
                     doc.write('\n')
                 doc.close()
                 showinfo("Guardar Archivo", "Archivo Guardado", icon="info")
