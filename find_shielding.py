@@ -32,7 +32,7 @@ def open_log():
 def find_rmn():  # Buscar los valores de SHIELDING en el archivo .log
     global rmn
     escudo.look_shielding()
-    if(escudo.rmn_13C != []):
+    if(escudo.valores_13C != []):
         shdScreen.set("Shielding Encontradas")
     else:
         shdScreen.set("No existen Shielding")

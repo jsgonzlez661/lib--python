@@ -66,20 +66,21 @@ class Shielding(documento):
     def look_shielding(self):  # ----- Buscar Shielding en el documento -----
         if(self._archivo != "" and self.lines != ""):
             i = 0
-            for line in self.lines:
-
-                if("C         X" in line):
-                    self.identificadorC = self.identificadorC + \
-                        line.strip('\n').split()
-                    self.valores_13C = self.valores_13C + \
-                        self.lines[i-3].split()
-                if("H         X" in line):
-                    self.identificadorH = self.identificadorH + \
-                        line.strip('\n').split()
-                    self.valores_1H = self.valores_1H + self.lines[i-3].split()
-                if("GIAO CHEMICAL SHIELDING TENSOR" in line):
-                    break
-                i = i+1
+            salida = ""
+            while(salida!="GIAO CHEMICAL SHIELDING TENSOR"):
+                for line in self.lines:
+                    if("C         X" in line):
+                        self.identificadorC = self.identificadorC + \
+                            line.strip('\n').split()
+                        self.valores_13C = self.valores_13C + \
+                            self.lines[i-3].split()
+                    if("H         X" in line):
+                        self.identificadorH = self.identificadorH + \
+                            line.strip('\n').split()
+                        self.valores_1H = self.valores_1H + self.lines[i-3].split()
+                    if("GIAO CHEMICAL SHIELDING TENSOR" in line):
+                        salida = "GIAO CHEMICAL SHIELDING TENSOR"
+                    i = i+1
             if(self.valores_13C != []):
                 self.valores_13C = self._convert_lista(self.valores_13C)
                 self.identificadorC = self.__identificar_atom(
