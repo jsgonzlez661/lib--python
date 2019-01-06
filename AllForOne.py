@@ -14,29 +14,29 @@ class documento():
 
     def __init__(self):  # ----- Constructor de la clase  -----
         self.nombre_doc = ""
-        self._job = ""
-        self._lines = ""
+        self._archivo = "" 
+        self._lines = ""  # ----- Se guadara las lineas del documento -----
 
     def abrir_docexp(self):  # ----- Abrir el archivo .log por el explorador -----
-        if(self._job == ""):
+        if(self._archivo == ""):
             opt = ""
             opt = {'defaultextension': '.log',
                    'filetypes': [('Archivo GAMESS', '*.log')]}
-            self._job = askopenfile(**opt)
-        if(self._job != None):
-            self._lines = self._job.readlines()
+            self._archivo = askopenfile(**opt)
+        if(self._archivo != None):
+            self._lines = self._archivo.readlines()
 
     def abrir_doc(self):  # ----- Abrir el archivo .log por el nombre -----
-        if(self._job == ""):
+        if(self._archivo == ""):
             self.nombre_doc = input(
                 "Ingrese el nombre del archivo .log: ") + '.log'
-            self._job = open(self.nombre_doc, mode='r',
-                             encoding='utf-8', errors='ignore')
-            self._lines = self._job.readlines()
+            self._archivo = open(self.nombre_doc, mode='r',
+                                 encoding='utf-8', errors='ignore')
+            self._lines = self._archivo.readlines()
 
     def cerrar_doc(self):  # ----- Cerrar el archivo .log -----
-        if(self._job != "" and self._job != None):
-            self._job.close()
+        if(self._archivo != "" and self._archivo != None):
+            self._archivo.close()
 
     def _convert_lista(self, lista):  # ----- Convertir las lista de str a float -----
         lista2 = []
@@ -56,30 +56,30 @@ class Shielding(documento):
 
     def __init__(self):  # ----- Constructor de la clase  -----
         documento.__init__(self)  # ----- Herencia de clase documento -----
-        self.rmn_13C = []
-        self.atomid13C = []
-        self.rmn_1H = []
-        self.atomid1H = []
+        self.valores_13C = []
+        self.identificadorC = []
+        self.valores_1H = []
+        self.identificadorH = []
 
     def look_shielding(self):  # ----- Buscar Shielding en el documento -----
-        if(self._job != "" and self._lines != ""):
+        if(self._archivo != "" and self._lines != ""):
             i = 0
             for line in self._lines:
                 i = i+1
                 if("C         X" in line):
-                    self.atomid13C = self.atomid13C + self._lines[i-1].split()
-                    self.rmn_13C = self.rmn_13C + self._lines[i+2].split()
+                    self.identificadorC = self.identificadorC + self._lines[i-1].split()
+                    self.valores_13C = self.valores_13C + self._lines[i+2].split()
                 if("H         X" in line):
-                    self.atomid1H = self.atomid1H + self._lines[i-1].split()
-                    self.rmn_1H = self.rmn_1H + self._lines[i+2].split()
-            if(self.rmn_13C != []):
-                self.rmn_13C = self._convert_lista(self.rmn_13C)
-                self.atomid13C = self.__identificar_atom(self.atomid13C)
-            if(self.rmn_1H != []):
-                self.rmn_1H = self._convert_lista(self.rmn_1H)
-                self.atomid1H = self.__identificar_atom(self.atomid1H)
+                    self.identificadorH = self.identificadorH + self._lines[i-1].split()
+                    self.valores_1H = self.valores_1H + self._lines[i+2].split()
+            if(self.valores_13C != []):
+                self.valores_13C = self._convert_lista(self.valores_13C)
+                self.identificadorC = self.__identificar_atom(self.identificadorC)
+            if(self.valores_1H != []):
+                self.valores_1H = self._convert_lista(self.valores_1H)
+                self.identificadorH = self.__identificar_atom(self.identificadorH)
             else:
-                if(self.rmn_13C == [] or self.rmn_1H == []):
+                if(self.valores_13C == [] or self.valores_1H == []):
                     return "No existen Shielding en el archivo"
 
     def __identificar_atom(self, lista):
@@ -93,7 +93,7 @@ class Shielding(documento):
             return atomID
 
     def save_shd(self):  # ----- Guardar en un archivo .txt valores encontrados -----
-        if(self.rmn_13C != [] and self.rmn_1H != []):
+        if(self.valores_13C != [] and self.valores_1H != []):
             name = ""
             word = {"defaultextension": ".txt", "filetypes": [("Text file", "*.txt")]
                     }
@@ -103,13 +103,13 @@ class Shielding(documento):
                 doc.write('Shielding Encontrados\n')
                 doc.write('\n')
                 doc.write('Carbono Shielding\n')
-                for i in range(0, len(self.rmn_13C)):
-                    doc.write(self.atomid13C[i] + " " + str(self.rmn_13C[i]))
+                for i in range(0, len(self.valores_13C)):
+                    doc.write(self.identificadorC[i] + " " + str(self.valores_13C[i]))
                     doc.write('\n')
                 doc.write('\n')
                 doc.write('Hidrogeno Shielding\n')
-                for i in range(0, len(self.rmn_1H)):
-                    doc.write(self.atomid1H[i] + " " + str(self.rmn_1H[i]))
+                for i in range(0, len(self.valores_1H)):
+                    doc.write(self.identificadorH[i] + " " + str(self.valores_1H[i]))
                     doc.write('\n')
                 doc.close()
                 showinfo("Guardar Archivo", "Archivo Guardado", icon="info")
