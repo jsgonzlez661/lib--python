@@ -2,12 +2,21 @@
 
 archivo = open("prueba.log", 'r')
 
-line = list(reversed(archivo.readline().strip()))
-cnt = 1
+line = list(reversed(archivo.readlines()))
+#print(line)
 
-while line:
-    print(line)
-    line = list(reversed(archivo.readline().strip()))
-    cnt += 1
+identificador = []
+valores = []
+hasta = ""
+i=0
+while hasta!="GIAO CHEMICAL SHIELDING TENSOR":
+    if("C         X" in line[i]):
+        identificador = identificador + line[i].split()        
+        valores = valores + line[i-3].split()
+    if("GIAO CHEMICAL SHIELDING TENSOR" in line[i]):
+        hasta = "GIAO CHEMICAL SHIELDING TENSOR"
+    i += 1
 
+print(identificador)
+print(valores)
 archivo.close()

@@ -67,20 +67,16 @@ class Shielding(documento):
         if(self._archivo != "" and self.lines != ""):
             i = 0
             salida = ""
-            while(salida!="GIAO CHEMICAL SHIELDING TENSOR"):
-                for line in self.lines:
-                    if("C         X" in line):
-                        self.identificadorC = self.identificadorC + \
-                            line.strip('\n').split()
-                        self.valores_13C = self.valores_13C + \
-                            self.lines[i-3].split()
-                    if("H         X" in line):
-                        self.identificadorH = self.identificadorH + \
-                            line.strip('\n').split()
-                        self.valores_1H = self.valores_1H + self.lines[i-3].split()
-                    if("GIAO CHEMICAL SHIELDING TENSOR" in line):
-                        salida = "GIAO CHEMICAL SHIELDING TENSOR"
-                    i = i+1
+            while(salida!="GIAO CHEMICAL SHIELDING TENSOR"):                
+                if("C         X" in self.lines[i]):
+                    self.identificadorC = self.identificadorC + self.lines[i].split()
+                    self.valores_13C = self.valores_13C + self.lines[i-3].split()
+                if("H         X" in self.lines[i]):
+                    self.identificadorH = self.identificadorH + self.lines[i].split()
+                    self.valores_1H = self.valores_1H + self.lines[i-3].split()
+                if("GIAO CHEMICAL SHIELDING TENSOR" in self.lines[i]):
+                    salida = "GIAO CHEMICAL SHIELDING TENSOR"
+                i = i+1
             if(self.valores_13C != []):
                 self.valores_13C = self._convert_lista(self.valores_13C)
                 self.identificadorC = self.__identificar_atom(
