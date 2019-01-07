@@ -24,8 +24,7 @@ class documento():
                    'filetypes': [('Archivo GAMESS', '*.log')]}
             self._archivo = askopenfile(**opt)
         if(self._archivo != None):
-            self.lines = reversed(self._archivo.readlines())
-            self.lines = list(self.lines)
+            self.lines = list(reversed(self._archivo.readlines())) #----- Inversion de la lineas del documento ----- 
 
     def abrir_doc(self):  # ----- Abrir el archivo .log por el nombre -----
         if(self._archivo == ""):
@@ -33,8 +32,7 @@ class documento():
                 "Ingrese el nombre del archivo .log: ") + '.log'
             self._archivo = open(self.nombre_doc, mode='r',
                                  encoding='utf-8', errors='ignore')
-            self.lines = reversed(self._archivo.readlines())
-            self.lines = list(self.lines)
+            self.lines = list(reversed(self._archivo.readlines())) #----- Inversion de la lineas del documento ----- 
 
     def cerrar_doc(self):  # ----- Cerrar el archivo .log -----
         if(self._archivo != "" and self._archivo != None):
