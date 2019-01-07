@@ -77,12 +77,10 @@ class Shielding(documento):
                 i = i+1
             if(self.valores_13C != []):
                 self.valores_13C = self._convert_lista(self.valores_13C)
-                self.identificadorC = self.__identificar_atom(
-                    self.identificadorC)
+                self.identificadorC = self.__identificar_atom(self.identificadorC)
             if(self.valores_1H != []):
                 self.valores_1H = self._convert_lista(self.valores_1H)
-                self.identificadorH = self.__identificar_atom(
-                    self.identificadorH)
+                self.identificadorH = self.__identificar_atom(self.identificadorH)
             else:
                 if(self.valores_13C == [] or self.valores_1H == []):
                     return "No existen Shielding en el archivo"
